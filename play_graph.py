@@ -38,4 +38,4 @@ e_prop[e6] = '50'
 e_prop[e7] = '50'
 
 graph_draw(g,vertex_text=v_prop,edge_text=e_prop ,vertex_font_size=18, output_size=(800,800),output="graph.png")
-g.save("tiago.dot")
+g.save("generated_dots/tiago.dot")
