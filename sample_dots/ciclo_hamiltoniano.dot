@@ -1,0 +1,7 @@
+graph{
+	a -- b[color=red,penwidth=3.0];
+	b -- c[color=red,penwidth=3.0];
+	c -- d[color=red,penwidth=3.0];
+	a -- c;
+	b -- d;
+}

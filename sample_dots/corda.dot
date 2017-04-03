@@ -1,0 +1,9 @@
+graph{
+	a -- b;
+	b -- c;
+	c -- d;
+	d -- e;
+	e -- f;
+	f -- a;
+	c -- e[color=red,penwidth=3.0];
+}
