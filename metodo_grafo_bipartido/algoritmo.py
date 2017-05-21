@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: latin-1 -*-
-#from graph_tool.all import *
+from graph_tool.all import *
 import csv
 import os
 import copy
@@ -46,7 +46,6 @@ def constroi_tabela_de_nos_numerados(matriz):
 
 os.system('clear')
 
-
 matriz_de_custo = matriz_de_custo_associado('custo_associado.csv')
 print ("Matriz de custo")
 print(matriz_de_custo)
@@ -57,3 +56,14 @@ print("Tabela de nós numerados")
 tabela_de_nos_numerados = []
 tabela_de_nos_numerados = constroi_tabela_de_nos_numerados(matriz_de_custo_ordenada)
 print(tabela_de_nos_numerados)
+
+print("Construção do grafo bipartido")
+#Valor da k conectividade
+k = 3
+sub1 = tabela_de_nos_numerados[0:k]
+sub2 = tabela_de_nos_numerados[k:len(tabela_de_nos_numerados)]
+
+print("Sub1")
+print(sub1)
+print("Sub2")
+print(sub2)
