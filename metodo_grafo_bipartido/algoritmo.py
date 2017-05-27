@@ -6,13 +6,13 @@ import os
 import copy
 import operator
 
-# Grafo utilizado no projeto
-graph = Graph(directed=False)
+'''
+--------------------------
+    Funções auxiliares
+--------------------------
+'''
 
-# Funções auxiliares
-
-
-def load_csv(nome_do_arquivo, array_destino):
+def carrega_sv(nome_do_arquivo, array_destino):
   with open(nome_do_arquivo, 'r') as f:
     reader = csv.reader(f)
     for r in reader:
@@ -21,10 +21,9 @@ def load_csv(nome_do_arquivo, array_destino):
       array_destino.append(r)
   f.close()
 
-
-def matriz_de_custo_associado(nome_do_arquivo):
+def carrega_matriz_de_custo_associado(nome_do_arquivo):
   matriz = []
-  load_csv(nome_do_arquivo, matriz)
+  carrega_sv(nome_do_arquivo, matriz)
   matriz_copia = copy.copy(matriz)
   for indice_linha in range(1, len(matriz)):
     custo_acumulado = 0
@@ -33,14 +32,11 @@ def matriz_de_custo_associado(nome_do_arquivo):
     matriz_copia[indice_linha].append(custo_acumulado)
   return matriz_copia
 
-
-def sort_table(table, col=0):
+def ordena_tabela_por_coluna(table, col=0):
   return sorted(table, key=operator.itemgetter(col))
 
-
 def ordena_matriz_de_custo_associado(matriz_de_custo_associado):
-  return sort_table(matriz_de_custo_associado, len(matriz_de_custo_associado))
-
+  return ordena_tabela_por_coluna(matriz_de_custo_associado, len(matriz_de_custo_associado))
 
 def constroi_tabela_de_nos_numerados(matriz):
   matriz_de_nos_numerados = []
@@ -50,51 +46,49 @@ def constroi_tabela_de_nos_numerados(matriz):
     linha_de_matriz_de_no_numerado.append(
         matriz[indice_da_matriz][len(matriz[indice_da_matriz]) - 1])
     linha_de_matriz_de_no_numerado.append(indice_da_matriz + 1)
-    print("linha_de_matriz_de_no_numerado", linha_de_matriz_de_no_numerado)
     matriz_de_nos_numerados.append(linha_de_matriz_de_no_numerado)
-    print("matriz_de_nos_numerados", matriz_de_nos_numerados)
   return matriz_de_nos_numerados
 
-
-def constroi_grafo_bipartido(primeira_parte, segunda_parte):
+def constroi_grafo_bipartido(primeira_parte, segunda_parte, k):
 
     #Cria grafo com número de vértices
   graph.add_vertex(len(primeira_parte)+len(segunda_parte))
 
   for indice_primeira_parte in range(len(primeira_parte)):
       for indice_segunda_parte in range(len(segunda_parte)):
-          print ("Conectando " , (indice_primeira_parte) , " a " , (indice_segunda_parte) + (len(segunda_parte))-1)
-          graph.add_edge(indice_primeira_parte,((indice_segunda_parte) + (len(segunda_parte))-1))
+          print ("Conectando " , (indice_primeira_parte) , " a " , (indice_segunda_parte) + (k))
+          graph.add_edge(indice_primeira_parte,((indice_segunda_parte) + (k)))
 
+#O programa inicia de fato aqui
+
+#Limpa console
 os.system('clear')
 
-matriz_de_custo = matriz_de_custo_associado('custo_associado.csv')
-print ("Matriz de custo")
-print(matriz_de_custo)
-print ("Matriz de custo ordenada")
-matriz_de_custo_ordenada = ordena_matriz_de_custo_associado(matriz_de_custo)
-print(matriz_de_custo_ordenada)
-print("Tabela de nós numerados")
+# Cria instância de objeto do tipo Grafo utilizado no projeto
+graph = Graph(directed=False)
+
+#Carrega matriz de custo
+matriz_de_custo = carrega_matriz_de_custo_associado('custo_associado.csv')
+
+#Constróio matriz de custo ordenada
+matriz_de_custo = ordena_matriz_de_custo_associado(matriz_de_custo)
+
+#Constróio tabelas de nós ordenada por custo acumulado
 tabela_de_nos_numerados = []
 tabela_de_nos_numerados = constroi_tabela_de_nos_numerados(
-    matriz_de_custo_ordenada)
-print(tabela_de_nos_numerados)
+    matriz_de_custo)
 
-print("Construção do grafo bipartido")
+#Construção do grafo bipartido
 # Valor da k conectividade
 k = 3
 
-sub1 = tabela_de_nos_numerados[0:k]
-sub2 = tabela_de_nos_numerados[k:len(tabela_de_nos_numerados)]
+subgraph1 = tabela_de_nos_numerados[0:k]
+subgraph2 = tabela_de_nos_numerados[k:len(tabela_de_nos_numerados)]
+print ("subgraph1" , subgraph1)
+print ("subgraph2" , subgraph2)
 
-print("Sub1")
-print(sub1)
-print("Sub2")
-print(sub2)
-
-constroi_grafo_bipartido(sub1,sub2)
-print("Edges")
-for e in graph.edges():
-    print(e)
+constroi_grafo_bipartido(subgraph1,subgraph2,k)
 
 graph.save("grafo_bipartido.dot")
+
+print("Grafo bipartido construído!")
